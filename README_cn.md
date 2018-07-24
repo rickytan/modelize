@@ -13,15 +13,15 @@
 
 ```json
 {
-    code: 0,
-    result: {
-        id: "123456",
-        nickname: "testName",
-        avatar: "https://domain.com/abc.jpg",
-        lastLogin: 1532341993000,
-        lastIP: "192.168.0.10",
-        status: 2,
-        level: 5,
+    "code": 0,
+    "result": {
+        "id": "123456",
+        "nickname": "testName",
+        "avatar": "https://domain.com/abc.jpg",
+        "lastLogin": 1532341993000,
+        "lastIP": "192.168.0.10",
+        "status": 2,
+        "level": 5,
         ...
     }
 }
@@ -76,9 +76,13 @@ public class User implements Serializable {
 
 为了减少学习成本，语法的设计上很大程度上参考了已有的 **DSL** 语言，如 **CSS**，**JSON** 等。
 
-用 `[]` 表示数组，`[Model]` 表示成员类型为 `Model` 的数组。用 `{}` 表示简单的匿名模型。
+### 匿名模型
+
+与 **JSON** 一样，我们用 `{}` 表示简单的匿名模型。在没有指明成员的情况下，与[内置模型](#内置模型) **Any** 语义一样。
 
 ### 命名模型
+
+命名模型是一个大写字母开头的英文名词（当然也可以带定语），如 **User**，**Order**，**Product**。模型的成员是[内置模型](#内置模型)，也可以是匿名模型，或另一个命名模型
 
 #### 内置模型
 
@@ -92,61 +96,11 @@ public class User implements Serializable {
 - **ISODate**，一个符合 [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) 定义的有规则字符串
 - **Timestamp**，**Unix** 时间戳，一种特殊的 **UInt**
 
-### 模型定义
+#### 数组
 
-### 普通模型
+与 **JSON** 一样，我们用 `[]` 表示数组，`[Model]` 表示成员类型为 **Model** 的数组。
 
-```
-GeoLocation {
-    latitude: Float,
-    longitude: Float
-}
-```
-
-
-
-```
-User {
-	id: String,
-    nickname: String,
-    avatar: Url?,
-    location: GeoLocation?,
-    birthday: ISODate?
-}
-```
-
-字符串类型可以省略，为缺省类型：
-
-```
-User {
-    firstName: String?,
-    middleName: String?,
-    lastName: String
-}
-```
-
-可以缩写为：
-
-```
-User {
-    firstName?,
-    middleName?,
-    lastName?
-}
-```
-
-
-
-```
-Article {
-    coverImages: [{url: Url, caption: String?}]?,
-    authors: [User],
-    publishDate: Int?,
-    publisher: User?
-}
-```
-
-### 注释
+#### 注释
 
 与大部分语言一样，使用双斜杠注释 `//`：
 
@@ -156,7 +110,7 @@ Model {		// This is a comment
 }
 ```
 
-### 可选
+#### 可选
 
 我们用 `?` 问题表示一个字段是可选的，在 **Objective-C** 中表现为 `nullable`，在 **Swift** 等语言中与它本身的语法一致。例如：
 
@@ -172,7 +126,61 @@ class Book {
 }
 ```
 
-### 嵌套
+#### 自定义模型
+
+自定义一个模型，语法类似 **CSS**，一个模型名，加大括号定义体，定义体中由字段名、字段类型键值对构成。
+
+* 普通模型
+
+```
+GeoLocation {
+    latitude: Float,
+    longitude: Float
+}
+```
+
+```
+User {
+	id: String,
+    nickname: String,
+    avatar: Url?,
+    location: GeoLocation?,
+    birthday: ISODate?
+}
+```
+
+​		字符串类型可以省略，为缺省类型：
+
+```
+User {
+    firstName: String?,
+    middleName: String?,
+    lastName: String?
+}
+```
+
+​		可以缩写为：
+
+```
+User {
+    firstName?,
+    middleName?,
+    lastName?
+}
+```
+
+* 嵌套模型
+
+```
+Article {
+    coverImages: [{url: Url, caption: String?}]?,
+    authors: [User],
+    publishDate: ISODate?,
+    publisher: User?
+}
+```
+
+​		嵌套匿名模型
 
 ```
 Post {
